@@ -28,17 +28,16 @@
     </a>
 </p>
 
-Autobahn is a set of tools (written in Swift) heavily inspired by [fastlane](https://github.com/fastlane/fastlane) to automate many day to day tasks associated with development of apps in the Apple ecosystem.  Currently most progess has been made on a sub package called [Shuttle](/Shuttle.md) that is basically a port of fastlane's [spaceship](https://github.com/fastlane/fastlane/tree/master/spaceship) which is an HTTP client for interacting with the Apple Developer portal and iTunesConnect.
+Autobahn is a set of tools (written in Swift) heavily inspired by [fastlane](https://github.com/fastlane/fastlane) to automate many day to day tasks associated with development of apps in the Apple ecosystem.  Currently most progess has been made on a sub package called [Shuttle](https://github.com/kdawgwilk/Shuttle) that is basically a port of fastlane's [spaceship](https://github.com/fastlane/fastlane/tree/master/spaceship) which is an HTTP client for interacting with the Apple Developer portal and iTunesConnect.
 
 >NOTE: This is still a work in progress and there is still much to do, here is a rough list of things I would like to see in the near future
 
 ### ToDO List:
 
-- [ ] Support all API endpoints [listed below](#api-endpoints)
 - [ ] >90% Code Coverage
-- [ ] CLI tool
+- [x] CLI tool
 - [ ] Autobahn.swift config file see [danger-swift](https://github.com/danger/danger-swift)
-- [ ] DSL for defining `highways`
+- [x] DSL for defining `highways`
 - [ ] Plugin architecture
 - [ ] Git support
 
@@ -52,32 +51,9 @@ $ autobahn [highway]
 ## Installation
 
 ```
+$ brew tap kdawgwilk/homebrew-tap
 $ brew install autobahn
 ```
-
-## API Endpoints
-
-Overview of the used API endpoints
-
-- `https://idmsa.apple.com`: Used to authenticate to get a valid session
-- `https://developerservices2.apple.com`:
-  - Get a list of all available provisioning profiles
-  - Register new devices
-- `https://developer.apple.com`:
-  - List all devices, certificates, apps and app groups
-  - Create new certificates, provisioning profiles and apps
-  - Disable/enable services on apps and assign them to app groups
-  - Delete certificates and apps
-  - Repair provisioning profiles
-  - Download provisioning profiles
-  - Team selection
-- `https://itunesconnect.apple.com`:
-  - Managing apps
-  - Managing beta testers
-  - Submitting updates to review
-  - Managing app metadata
-- `https://du-itc.itunesconnect.apple.com`:
-  - Upload icons, screenshots, trailers ...
 
 ### 🚀 Contributing
 

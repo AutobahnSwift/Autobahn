@@ -1,36 +1,36 @@
 import Foundation
 import AutobahnDescription
 
-// let condor = Condor()
-// condor.defaultTask = "release"
+// let autobahn = Autobahn()
+// autoban.defaultTask = "release"
 
 
-beforeAll { task in
-	print("Running task: \(task)")
+beforeAll { highway in
+	print("Driving highway: \(highway)")
 }
 
-task("build") {
+highway("build") {
 	print("Building...")
 	try sh("swift", "build")
 }
 
-task("test") {
+highway("test") {
 	try sh("swift", "test")
 }
 
-task("deploy") {
+highway("deploy") {
 	print("Deploying...")
 }
 
-task("release", dependsOn: ["build", "deploy"]) {
+highway("release", dependsOn: ["build", "deploy"]) {
 	print("Releasing...")
 }
 
-afterAll { task in
-	print("Successfully ran task: \(task)")
+afterAll { highway in
+	print("Successfully ran task: \(highway)")
 }
 
-onError { task, error in
-	print("Error running task: \(task)")
+onError { highway, error in
+	print("Error driving highway: \(highway)")
 	print("Error: \(error.localizedDescription)")
 }

@@ -13,15 +13,15 @@ private final class AutobahnDescription {
 
     static let shared = AutobahnDescription()
 
-    var currentTask: String
+    var currentHighway: String
     var beforeAllHandler: ((String) throws -> Void)?
-    var tasks = [String:() throws -> Void]()
+    var highways = [String:() throws -> Void]()
     var afterAllHandler: ((String) throws -> Void)?
     var onErrorHandler: ((String, Error) -> Void)?
 
     private init() {
         let args = CommandLine.arguments
-        currentTask = args.count > 1 ? args[1] : "run"
+        currentHighway = args.count > 1 ? args[1] : "run"
 
         dumpResultsAtExit(self, path: ".")
     }
@@ -36,12 +36,12 @@ public func beforeAll(handler: @escaping (String) throws -> Void) {
     AutobahnDescription.shared.beforeAllHandler = handler
 }
 
-public enum TaskError: Error {
-    case taskNotFound
+public enum HighwayError: Error {
+    case highwayNotFound
 }
 
-public func task(_ name: String, dependsOn: [String] = [], taskHandler: @escaping () throws -> Void) {
-    AutobahnDescription.shared.tasks[name] = taskHandler
+public func highway(_ name: String, dependsOn: [String] = [], taskHandler: @escaping () throws -> Void) {
+    AutobahnDescription.shared.highways[name] = taskHandler
 }
 
 public func sh(_ cmd: String, _ args: String...) throws {
@@ -73,14 +73,14 @@ private func dumpResultsAtExit(_ runner: AutobahnDescription, path: String) {
         let autobahn = dumpInfo.autobahn
 
         do {
-            try autobahn.beforeAllHandler?(autobahn.currentTask)
-            guard let task = autobahn.tasks[autobahn.currentTask] else {
-                throw TaskError.taskNotFound
+            try autobahn.beforeAllHandler?(autobahn.currentHighway)
+            guard let highway = autobahn.highways[autobahn.currentHighway] else {
+                throw HighwayError.highwayNotFound
             }
-            try task()
-            try autobahn.afterAllHandler?(autobahn.currentTask)
+            try highway()
+            try autobahn.afterAllHandler?(autobahn.currentHighway)
         } catch {
-            autobahn.onErrorHandler?(autobahn.currentTask, error)
+            autobahn.onErrorHandler?(autobahn.currentHighway, error)
         }
     }
     dumpInfo = (runner, path)

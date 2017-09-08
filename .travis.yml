@@ -6,9 +6,7 @@ sudo: required
 dist: xenial
 osx_image: xcode9.0
 before_install:
-  - if [ $TRAVIS_OS_NAME == "linux" ]; then
-        sudo apt-get install swift-beta
-      fi
+  - '[ $TRAVIS_OS_NAME == "linux" ] && sudo apt-get install swift-beta'
 script:
     - swift build
     - swift build -c release

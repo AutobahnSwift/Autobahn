@@ -27,7 +27,7 @@ highway("release", dependsOn: ["build", "deploy"]) {
 }
 
 afterAll { highway in
-	print("Successfully ran task: \(highway)")
+	print("Successfully drove highway: \(highway)")
 }
 
 onError { highway, error in

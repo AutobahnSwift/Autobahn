@@ -4,7 +4,5 @@ templates:
   - .sourcery
 args:
   testImports:
-    - "@testable import AutobahnTests"
+    - "@testable import AutobahnDescriptionTests"
     - "@testable import AutobahnFrameworkTests"
-    - "@testable import ShuttleTests"
-    - "@testable import ShuttleFrameworkTests"

@@ -34,12 +34,21 @@ Autobahn is a set of tools (written in Swift) heavily inspired by [fastlane](htt
 
 ### ToDO List:
 
-- [ ] >90% Code Coverage
-- [x] CLI tool
-- [ ] Autobahn.swift config file see [danger-swift](https://github.com/danger/danger-swift)
 - [x] DSL for defining `highways`
+- [ ] >90% Code Coverage
+- [ ] CLI tool
+  - [ ] `<highway>` drives the highway specified
+  - [ ] `init` creates template `Autobahn.swift` file
+  - [ ] `edit` command that creates a temp playground with autocomplete working for Autobahn.swift
+  - [ ] `verbose` obviously
+  - [ ] `actions` lists all available actions
+  - [ ] `action <action_name>` that describes the action
+  - [ ] `help` to explain how each command works
+- [x] Autobahn.swift config file see [danger-swift](https://github.com/danger/danger-swift)
+- [ ] Homebrew install support
 - [ ] Plugin architecture
 - [ ] Git support
+- [ ] Support `.env`
 
 
 ## Usage
@@ -87,9 +96,26 @@ onError { highway, error in
 
 ## Installation
 
+TODO: Not support quite yet
+
 ```
 $ brew tap kdawgwilk/homebrew-tap
 $ brew install autobahn
+```
+
+### Development
+
+```
+$ git clone https://github.com/kdawgwilk/Autobahn.git
+$ cd Autobahn
+$ swift build
+# You can run the cli from the build dir like this:
+# .build/debug/autobahn <highway_name>
+$ .build/debug/autobahn build
+# Or I find it helpful to symlink to `/usr/local/bin` so I can run it directly
+$ ln -s `pwd`/.build/debug/autobahn /usr/local/bin/autobahn
+# autobahn <highway_name>
+$ autobahn build
 ```
 
 ### 🚀 Contributing

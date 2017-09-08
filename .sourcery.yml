@@ -1,0 +1,10 @@
+sources:
+  - Tests
+templates:
+  - .sourcery
+args:
+  testImports:
+    - "@testable import AutobahnTests"
+    - "@testable import AutobahnFrameworkTests"
+    - "@testable import ShuttleTests"
+    - "@testable import ShuttleFrameworkTests"

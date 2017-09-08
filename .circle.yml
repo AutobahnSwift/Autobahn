@@ -1,0 +1,10 @@
+dependencies:
+  override:
+    - sudo apt-get install swift
+    - sudo chmod -R a+rx /usr/
+test:
+  override:
+    - swift build
+    - swift build -c release
+    - swift test
+    

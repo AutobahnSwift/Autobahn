@@ -1,0 +1,19 @@
+// sourcery:file:Tests/LinuxMain.swift
+import XCTest
+
+{% for testImport in argument.testImports %}
+{{ testImport }}
+{% endfor %}
+
+{% for type in types.classes|based:"XCTestCase" %}
+{% if not type.annotations.disableTests %}extension {{ type.name }} {
+  static var allTests: [(String, ({{ type.name }}) -> () throws -> Void)] = [
+  {% for method in type.methods %}{% if method.parameters.count == 0 and method.shortName|hasPrefix:"test" %}  ("{{ method.shortName }}", {{ method.shortName }}){% if not forloop.last %},{% endif %}
+  {% endif %}{% endfor %}]
+}
+
+{% endif %}{% endfor %}
+XCTMain([
+{% for type in types.classes|based:"XCTestCase" %}{% if not type.annotations.disableTests %}  testCase({{ type.name }}.allTests),
+{% endif %}{% endfor %}])
+// sourcery:end

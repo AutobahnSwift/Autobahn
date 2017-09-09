@@ -9,11 +9,7 @@ import Foundation
 
 public final class Autobahn {
     public static func run() throws {
-        var verbose = false
-
-        if CommandLine.arguments.contains("-v") {
-            verbose = true
-        }
+        let verbose = CommandLine.arguments.contains("-v")
 
         // Finds first occurrence of supported path
         let supportedPaths = ["Autobahn.swift", "autobahn/Autobahn.swift", "Autobahn/Autobahn.swift", ".autobahn/Autobahn.swift"]
@@ -53,7 +49,3 @@ public final class Autobahn {
 
     }
 }
-
-
-
-

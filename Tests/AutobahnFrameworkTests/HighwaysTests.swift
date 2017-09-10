@@ -13,3 +13,11 @@ class HighwaysTests: XCTestCase {
 //        XCTAssertEqual("Running Hello ...", console.outputBuffer.last ?? "")
     }
 }
+
+#if os(Linux)
+extension HighwaysTests {
+    static let allTests = [
+        ("testExample", testExample)
+    ]
+}
+#endif

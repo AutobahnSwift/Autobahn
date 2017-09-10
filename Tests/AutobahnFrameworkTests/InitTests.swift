@@ -13,3 +13,11 @@ class InitTests: XCTestCase {
 //        XCTAssertEqual("Running Hello ...", console.outputBuffer.last ?? "")
     }
 }
+
+#if os(Linux)
+extension InitTests {
+    static let allTests = [
+        ("testInitNameResolution", testInitNameResolution)
+    ]
+}
+#endif

@@ -6,3 +6,11 @@ class AutobahnDescriptionTests: XCTestCase {
         XCTAssertTrue(true)
     }
 }
+
+#if os(Linux)
+extension AutobahnDescriptionTests {
+    static let allTests = [
+        ("testExample", testExample)
+    ]
+}
+#endif

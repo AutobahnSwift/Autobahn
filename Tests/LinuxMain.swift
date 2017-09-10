@@ -5,20 +5,17 @@ import XCTest
 
 @testable import AutobahnDescriptionTests
 @testable import AutobahnFrameworkTests
-
-extension AutobahnDescriptionTests {
-  static var allTests: [(String, (AutobahnDescriptionTests) -> () throws -> Void)] = [
-    ("testExample", testExample)
-  ]
-}
-
-extension AutobahnFrameworkTests {
-  static var allTests: [(String, (AutobahnFrameworkTests) -> () throws -> Void)] = [
-    ("testExample", testExample)
-  ]
-}
+@testable import ActionsTests
 
 XCTMain([
   testCase(AutobahnDescriptionTests.allTests),
-  testCase(AutobahnFrameworkTests.allTests),
+  testCase(ActionTests.allTests),
+  testCase(ActionsTests.allTests),
+  testCase(DriveTests.allTests),
+  testCase(EditTests.allTests),
+  testCase(HighwaysTests.allTests),
+  testCase(InitTests.allTests),
+  testCase(FastlaneTests.allTests),
+  testCase(ShellTests.allTests),
+  testCase(XcodeTests.allTests)
 ])

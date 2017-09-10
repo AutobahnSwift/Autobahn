@@ -6,3 +6,11 @@ class XcodeTests: XCTestCase {
         XCTAssertTrue(true)
     }
 }
+
+#if os(Linux)
+extension XcodeTests {
+    static let allTests = [
+        ("testExample", testExample)
+    ]
+}
+#endif

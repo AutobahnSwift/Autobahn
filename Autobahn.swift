@@ -2,7 +2,7 @@ import Foundation
 import AutobahnDescription
 
 enum Highway: String, AutobahnDescription.Highway {
-	case build, test, deploy, release
+	case build, buildRelease, test, deploy, release
 }
 
 Autobahn(Highway.self)
@@ -14,6 +14,11 @@ Autobahn(Highway.self)
 .highway(.build) {
 	print("Building...")
 	try sh("swift", "build")
+}
+
+.highway(.buildRelease) {
+	print("Building...")
+	try sh("swift", "build", "-c", "release")
 }
 
 .highway(.test) {

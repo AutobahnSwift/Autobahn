@@ -8,7 +8,7 @@ import Foundation
 import Actions
 
 
-private final class AutobahnDescription {
+final class AutobahnDescription {
     let version = "0.0.1"
 
     static let shared = AutobahnDescription()

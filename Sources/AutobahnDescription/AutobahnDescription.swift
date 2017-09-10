@@ -7,82 +7,112 @@
 import Foundation
 import Actions
 
+private extension Array {
+    var second: Element? {
+        guard count > 1 else {
+            return nil
+        }
+        return self[1]
+    }
+}
 
-final class AutobahnDescription {
-    let version = "0.0.1"
+/// Highway is the protocol which every highway should follow.
+///
+/// We suggest defining the highways as an enum like this:
+///
+/// ```Swift
+/// enum MyHighways {
+///     case build, test, deploy, release
+///
+///     var usage: String {
+///         switch self {
+///         case .build: return "This is how you should use build:…"
+///         // … handle all cases
+///     }
+/// }
+/// ```
+public protocol Highway: RawRepresentable, Hashable where RawValue == String {
+    var usage: String { get }
+}
 
-    static let shared = AutobahnDescription()
+public extension Highway {
+    var usage: String {
+        return "No usage specified for \(self)"
+    }
+}
 
-    var currentHighway: String
-    var beforeAllHandler: ((String) throws -> Void)?
-    var highways = [String:() throws -> Void]()
-    var afterAllHandler: ((String) throws -> Void)?
+public final class Autobahn<H: Highway> {
+    let version = "0.1.0"
+
+    var beforeAllHandler: ((H) throws -> Void)?
+    var highways = [H: () throws -> Void]()
+    var afterAllHandler: ((H) throws -> Void)?
     var onErrorHandler: ((String, Error) -> Void)?
-
-    private init() {
+    
+    // MARK: - Possible errors
+    
+    public enum HighwayError: Error {
+        case noHighwaySpecified
+        case noValidHighwayName(String)
+        case highwayNotFound(String)
+    }
+    
+    // MARK: - Public Functions
+    
+    public init(_ highwayType: H.Type) {}
+    
+    public func beforeAll(handler: @escaping (H) throws -> Void) -> Autobahn<H> {
+        guard self.beforeAllHandler == nil else {
+            fatalError("beforeAll declared more than once")
+        }
+        self.beforeAllHandler = handler
+        return self
+    }
+    
+    public func highway(_ highway: H, dependsOn: [H] = [], taskHandler: @escaping () throws -> Void) -> Autobahn<H> {
+        self.highways[highway] = taskHandler
+        return self
+    }
+    
+    public func afterAll(handler: @escaping (H) throws -> Void) -> Autobahn<H> {
+        guard self.afterAllHandler == nil else {
+            fatalError("afterAll declared more than once")
+        }
+        self.afterAllHandler = handler
+        return self
+    }
+    
+    public func onError(handler: @escaping (String, Error) -> Void) -> Autobahn<H> {
+        guard self.onErrorHandler == nil else {
+            fatalError("onError declared more than once")
+        }
+        self.onErrorHandler = handler
+        return self
+    }
+    
+    public func drive() {
         let args = CommandLine.arguments
-        currentHighway = args.count > 1 ? args[1] : "run"
-
-        dumpResultsAtExit(self, path: ".")
+        let secondArg = args.second
+        
+        do {
+            guard let raw = secondArg else {
+                throw HighwayError.noHighwaySpecified
+            }
+            guard let currentHighway = H(rawValue: raw) else {
+                throw HighwayError.noValidHighwayName(raw)
+            }
+            try self.beforeAllHandler?(currentHighway)
+            guard let highway = self.highways[currentHighway] else {
+                throw HighwayError.highwayNotFound(currentHighway.rawValue)
+            }
+            try highway()
+            try self.afterAllHandler?(currentHighway)
+        } catch {
+            self.onErrorHandler?(secondArg ?? "", error)
+        }
     }
-}
-
-// MARK: - Public Functions
-
-public func beforeAll(handler: @escaping (String) throws -> Void) {
-    guard AutobahnDescription.shared.beforeAllHandler == nil else {
-        fatalError("beforeAll declared more than once")
-    }
-    AutobahnDescription.shared.beforeAllHandler = handler
-}
-
-public enum HighwayError: Error {
-    case highwayNotFound
-}
-
-public func highway(_ name: String, dependsOn: [String] = [], taskHandler: @escaping () throws -> Void) {
-    AutobahnDescription.shared.highways[name] = taskHandler
 }
 
 public func sh(_ cmd: String, _ args: String...) throws {
     try Shell.run(cmd, args: args)
-}
-
-public func afterAll(handler: @escaping (String) throws -> Void) {
-    guard AutobahnDescription.shared.afterAllHandler == nil else {
-        fatalError("afterAll declared more than once")
-    }
-    AutobahnDescription.shared.afterAllHandler = handler
-}
-
-public func onError(handler: @escaping (String, Error) -> Void) {
-    guard AutobahnDescription.shared.onErrorHandler == nil else {
-        fatalError("onError declared more than once")
-    }
-    AutobahnDescription.shared.onErrorHandler = handler
-}
-
-// MARK: - Private Functions
-
-private var dumpInfo: (autobahn: AutobahnDescription, path: String)?
-
-private func dumpResultsAtExit(_ runner: AutobahnDescription, path: String) {
-    func dump() {
-        guard let dumpInfo = dumpInfo else { return }
-//        print("Sending results back to Autobahn")
-        let autobahn = dumpInfo.autobahn
-
-        do {
-            try autobahn.beforeAllHandler?(autobahn.currentHighway)
-            guard let highway = autobahn.highways[autobahn.currentHighway] else {
-                throw HighwayError.highwayNotFound
-            }
-            try highway()
-            try autobahn.afterAllHandler?(autobahn.currentHighway)
-        } catch {
-            autobahn.onErrorHandler?(autobahn.currentHighway, error)
-        }
-    }
-    dumpInfo = (runner, path)
-    atexit(dump)
 }

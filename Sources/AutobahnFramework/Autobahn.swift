@@ -12,6 +12,7 @@ public enum AutobahnError: Error {
 }
 
 public final class Autobahn {
+
     public static func run() {
         var args = CommandLine.arguments
         let executable = args.removeFirst()
@@ -56,7 +57,3 @@ public final class Autobahn {
         }
     }
 }
-
-
-
-

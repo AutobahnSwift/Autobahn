@@ -1,36 +1,40 @@
 import Foundation
 import AutobahnDescription
 
-// let autobahn = Autobahn()
-// autoban.defaultTask = "release"
+enum Highway: String, AutobahnDescription.Highway {
+	case build, test, deploy, release
+}
 
+Autobahn(Highway.self)
 
-beforeAll { highway in
+.beforeAll { highway in
 	print("Driving highway: \(highway)")
 }
 
-highway("build") {
+.highway(.build) {
 	print("Building...")
 	try sh("swift", "build")
 }
 
-highway("test") {
+.highway(.test) {
 	try sh("swift", "test")
 }
 
-highway("deploy") {
+.highway(.deploy) {
 	print("Deploying...")
 }
 
-highway("release", dependsOn: ["build", "deploy"]) {
+.highway(.release, dependsOn: [.build, .deploy]) {
 	print("Releasing...")
 }
 
-afterAll { highway in
+.afterAll { highway in
 	print("Successfully drove highway: \(highway)")
 }
 
-onError { highway, error in
-	print("Error driving highway: \(highway)")
-	print("Error: \(error.localizedDescription)")
+.onError { name, error in
+	print("Error driving highway: \(name)")
+	print("Error: \(error)")
 }
+
+.drive()

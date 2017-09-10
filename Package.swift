@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
 //        .package(url: "https://github.com/swift-xcode/xcodeproj.git", .upToNextMajor(from: "0.1.2")),
-//        .package(url: "https://github.com/kdawgwilk/Shuttle.git", .branch("master")),
+        .package(url: "https://github.com/kdawgwilk/Shuttle.git", .branch("master")),
         .package(url: "https://github.com/vapor/console.git", .upToNextMajor(from: "2.2.0")),
 //        .package(url: "https://github.com/Quick/Quick.git", .branch("support-swift-4")),
 //        .package(url: "https://github.com/Quick/Nimble.git", .branch("support-swift-4")),
@@ -26,6 +26,7 @@ let package = Package(
 
         .testTarget(name: "AutobahnDescriptionTests", dependencies: ["AutobahnDescription"]),
         .testTarget(name: "AutobahnFrameworkTests", dependencies: ["AutobahnFramework"]),
+        .testTarget(name: "ActionsTests", dependencies: ["Actions"]),
     ],
     swiftLanguageVersions: [3, 4]
 )

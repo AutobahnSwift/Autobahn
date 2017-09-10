@@ -2,9 +2,9 @@
 <h1 align="center">Autobahn</h1>
 
 <p align="center">
-    <!-- <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
+    <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
         <img src="https://img.shields.io/travis/kdawgwilk/Autobahn.svg" alt="Travis status" />
-    </a> -->
+    </a>
     <!-- <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
         <img src="https://img.shields.io/circleci/project/github/kdawgwilk/Autobahn.svg" alt="CircleCI status" />
     </a> -->
@@ -53,7 +53,7 @@ Autobahn is a set of tools (written in Swift) heavily inspired by [fastlane](htt
 ## Usage
 
 ```
-$ autobahn [highway]
+$ autobahn drive [highway]
 ```
 
 ## Example Autobahn.swift

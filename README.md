@@ -110,14 +110,14 @@ $ cd Autobahn
 $ swift build
 
 # You can run the cli from the build dir like this:
-# .build/debug/autobahn <highway_name>
-$ .build/debug/autobahn build
+# .build/debug/autobahn drive <highway_name>
+$ .build/debug/autobahn drive build
 
 # Or I find it helpful to symlink to `/usr/local/bin` so I can run it directly
 $ ln -s `pwd`/.build/debug/autobahn /usr/local/bin/autobahn
 
-# autobahn <highway_name>
-$ autobahn build
+# autobahn drive <highway_name>
+$ autobahn drive build
 ```
 
 ### 🚀 Contributing

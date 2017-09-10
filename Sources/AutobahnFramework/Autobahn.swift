@@ -5,47 +5,55 @@
 #endif
 
 import Foundation
+import Console
 
+public enum AutobahnError: Error {
+    case general(String)
+}
 
 public final class Autobahn {
-    public static func run() throws {
-        let verbose = CommandLine.arguments.contains("-v")
 
-        // Finds first occurrence of supported path
-        let supportedPaths = ["Autobahn.swift", "autobahn/Autobahn.swift", "Autobahn/Autobahn.swift", ".autobahn/Autobahn.swift"]
+    public static func run() {
+        var args = CommandLine.arguments
+        let executable = args.removeFirst()
 
-        let resolvedPath = supportedPaths.first { path in
-            return FileManager.default.fileExists(atPath: path)
-        }
+        let terminal = Terminal(arguments: args)
 
-        // Exit if a Autobahn.swift was not found at any supported path
-        guard let autobahnFilePath = resolvedPath else {
-            print("Could not find a Autobahn.swift")
-            print("Please use a supported path: \(supportedPaths)")
+        let group = Group(id: executable, commands: [
+//                Action(console: terminal),
+//                Actions(console: terminal),
+//                Highways(console: terminal),
+                Drive(console: terminal),
+//                Edit(console: terminal),
+                Init(console: terminal),
+            ], help: [
+                "CLI for 'autobahn' - The swiftiest way to automate mundane developer tasks for your iOS apps",
+            ], fallback: Drive(console: terminal))
+
+        do {
+            try terminal.run(group, arguments: args)
+        } catch AutobahnError.general(let message) {
+            terminal.error("Error: ", newLine: false)
+            terminal.print(message)
+            exit(1)
+        } catch ConsoleError.insufficientArguments {
+            terminal.error("Error: ", newLine: false)
+            terminal.print("Insufficient arguments.")
+        } catch ConsoleError.help {
             exit(0)
+        } catch ConsoleError.cancelled {
+            print("Cancelled")
+            exit(2)
+        } catch ConsoleError.noCommand {
+            terminal.error("Error: ", newLine: false)
+            terminal.print("No command supplied.")
+        } catch ConsoleError.commandNotFound(let id) {
+            terminal.error("Error: ", newLine: false)
+            terminal.print("Command \"\(id)\" not found.")
+        } catch {
+            terminal.error("Error: ", newLine: false)
+            terminal.print("\(error)")
+            exit(1)
         }
-
-        var args = [String]()
-        args += ["--driver-mode=swift"] // Eval in swift mode, I think?
-        args += ["-L", ".build/debug"] // Find libs inside this folder (may need to change in production)
-        args += ["-I", ".build/debug"] // Find libs inside this folder (may need to change in production)
-        //args += ["-L", "/usr/local/lib"]
-        //args += ["-I", "/usr/local/lib"]
-        args += ["-lAutobahnDescription"] // Eval the code with the Target Autobahn added
-        verbose ? args += ["-v"] : ()
-        args += [autobahnFilePath] // The Autobahn.swift
-
-        if CommandLine.arguments.count > 1, CommandLine.arguments[1] != "-v" {
-            args += [CommandLine.arguments[1]]
-        }
-
-        let cmd = "/usr/bin/swiftc"
-        verbose ? print("Command: \(cmd) \(args.joined(separator: " "))") : ()
-        let proc = Process()
-        proc.launchPath = cmd
-        proc.arguments = args
-        proc.launch()
-        proc.waitUntilExit()
-
     }
 }

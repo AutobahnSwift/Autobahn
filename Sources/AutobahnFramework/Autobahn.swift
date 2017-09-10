@@ -7,9 +7,6 @@
 import Foundation
 import Console
 
-public enum AutobahnError: Error {
-    case general(String)
-}
 
 public final class Autobahn {
 
@@ -32,9 +29,11 @@ public final class Autobahn {
 
         do {
             try terminal.run(group, arguments: args)
-        } catch AutobahnError.general(let message) {
+        } catch let error as AutobahnError {
             terminal.error("Error: ", newLine: false)
-            terminal.print(message)
+            terminal.print(error.error)
+            terminal.info("Help: ", newLine: false)
+            terminal.print(error.helpMessage)
             exit(1)
         } catch ConsoleError.insufficientArguments {
             terminal.error("Error: ", newLine: false)
@@ -50,6 +49,7 @@ public final class Autobahn {
         } catch ConsoleError.commandNotFound(let id) {
             terminal.error("Error: ", newLine: false)
             terminal.print("Command \"\(id)\" not found.")
+            exit(1)
         } catch {
             terminal.error("Error: ", newLine: false)
             terminal.print("\(error)")

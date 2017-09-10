@@ -37,9 +37,9 @@ public final class Drive: Command {
 
         // Exit if a Autobahn.swift was not found at any supported path
         guard let autobahnFilePath = resolvedPath else {
-            print("Could not find a Autobahn.swift")
-            print("Please use a supported path: \(supportedPaths)")
-            exit(0)
+            let error = "Could not find a Autobahn.swift file"
+            let help = "Please use a supported path: \n\(supportedPaths)"
+            throw AutobahnError.general(error, help: help)
         }
 
         var args = [String]()
@@ -63,5 +63,11 @@ public final class Drive: Command {
         proc.arguments = args
         proc.launch()
         proc.waitUntilExit()
+
+        if proc.terminationStatus != 0 {
+            let error = "Running Autobahn.swift failed"
+            let help = "Try running with the --verbose flag to get more info"
+            throw AutobahnError.general(error, help: help)
+        }
     }
 }

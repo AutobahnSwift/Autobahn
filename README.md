@@ -2,24 +2,22 @@
 <h1 align="center">Autobahn</h1>
 
 <p align="center">
-    <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
+    <!-- <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
         <img src="https://img.shields.io/travis/kdawgwilk/Autobahn.svg" alt="Travis status" />
-    </a>
-    <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
+    </a> -->
+    <!-- <a href="https://travis-ci.org/kdawgwilk/Autobahn/branches">
         <img src="https://img.shields.io/circleci/project/github/kdawgwilk/Autobahn.svg" alt="CircleCI status" />
-    </a>
+    </a> -->
     <!-- <a href=""> -->
-        <img src="https://img.shields.io/codecov/c/github/kdawgwilk/Autobahn.svg" alt="Code coverage" />
+        <!-- <img src="https://img.shields.io/codecov/c/github/kdawgwilk/Autobahn.svg" alt="Code coverage" /> -->
     <!-- </a> -->
-    <!-- <a href=""> -->
-        <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version" />
-    <!-- </a> -->
+    <img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version" />
     <a href="https://swift.org">
         <img src="http://img.shields.io/badge/swift-4.0-brightgreen.svg" alt="Swift 4.0">
     </a>
-    <a href="https://kdawgwilk.github.com/autobahn/docs">
+    <!-- <a href="https://kdawgwilk.github.com/autobahn/docs">
         <img src="http://img.shields.io/badge/read_the-docs-lightgrey.svg" alt="Docs">
-    </a>
+    </a> -->
     <a href="https://github.com/kdawgwilk/Autobahn/blob/master/LICENSE">
         <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License" />
     </a>
@@ -37,13 +35,14 @@ Autobahn is a set of tools (written in Swift) heavily inspired by [fastlane](htt
 - [x] DSL for defining `highways`
 - [ ] >90% Code Coverage
 - [ ] CLI tool
-  - [ ] `<highway>` drives the highway specified
-  - [ ] `init` creates template `Autobahn.swift` file
+  - [x] `drive <highway>` drives the highway specified
+    - [ ] need to make this the default still
+  - [x] `init` creates template `Autobahn.swift` file
   - [ ] `edit` command that creates a temp playground with autocomplete working for Autobahn.swift
   - [ ] `verbose` obviously
   - [ ] `actions` lists all available actions
   - [ ] `action <action_name>` that describes the action
-  - [ ] `help` to explain how each command works
+  - [x] `help` to explain how each command works
 - [x] Autobahn.swift config file see [danger-swift](https://github.com/danger/danger-swift)
 - [ ] Homebrew install support
 - [ ] Plugin architecture
@@ -101,7 +100,7 @@ Autobahn(Highway.self)
 
 ## Installation
 
-TODO: Not support quite yet
+TODO: Not supported quite yet
 
 ```
 $ brew tap kdawgwilk/homebrew-tap
@@ -110,17 +109,20 @@ $ brew install autobahn
 
 ### Development
 
-```
+```sh
 $ git clone https://github.com/kdawgwilk/Autobahn.git
 $ cd Autobahn
 $ swift build
+
 # You can run the cli from the build dir like this:
-# .build/debug/autobahn <highway_name>
-$ .build/debug/autobahn build
+# .build/debug/autobahn drive <highway_name>
+$ .build/debug/autobahn drive build
+
 # Or I find it helpful to symlink to `/usr/local/bin` so I can run it directly
 $ ln -s `pwd`/.build/debug/autobahn /usr/local/bin/autobahn
-# autobahn <highway_name>
-$ autobahn build
+
+# autobahn drive <highway_name>
+$ autobahn drive build
 ```
 
 ### 🚀 Contributing

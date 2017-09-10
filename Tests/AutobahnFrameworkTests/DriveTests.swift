@@ -13,11 +13,3 @@ class DriveTests: XCTestCase {
 //        XCTAssertEqual("Running Hello ...", console.outputBuffer.last ?? "")
     }
 }
-
-#if os(Linux)
-extension DriveTests {
-    static let allTests = [
-        ("testDriveNameResolution", testDriveNameResolution)
-    ]
-}
-#endif

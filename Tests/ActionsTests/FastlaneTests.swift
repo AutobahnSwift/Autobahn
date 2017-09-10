@@ -6,11 +6,3 @@ class FastlaneTests: XCTestCase {
         XCTAssertTrue(true)
     }
 }
-
-#if os(Linux)
-extension FastlaneTests {
-    static let allTests = [
-        ("testExample", testExample)
-    ]
-}
-#endif

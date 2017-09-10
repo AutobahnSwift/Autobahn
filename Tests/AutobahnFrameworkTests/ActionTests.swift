@@ -13,11 +13,3 @@ class ActionTests: XCTestCase {
 //        XCTAssertEqual("Running Hello ...", console.outputBuffer.last ?? "")
     }
 }
-
-#if os(Linux)
-extension ActionTests {
-    static let allTests = [
-        ("testExample", testExample)
-    ]
-}
-#endif

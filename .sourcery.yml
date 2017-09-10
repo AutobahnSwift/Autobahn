@@ -6,3 +6,4 @@ args:
   testImports:
     - "@testable import AutobahnDescriptionTests"
     - "@testable import AutobahnFrameworkTests"
+    - "@testable import ActionsTests"

@@ -6,11 +6,3 @@ class ShellTests: XCTestCase {
         XCTAssertTrue(true)
     }
 }
-
-#if os(Linux)
-extension ShellTests {
-    static let allTests = [
-        ("testExample", testExample)
-    ]
-}
-#endif

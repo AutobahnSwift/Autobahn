@@ -13,11 +13,3 @@ class EditTests: XCTestCase {
 //        XCTAssertEqual("Running Hello ...", console.outputBuffer.last ?? "")
     }
 }
-
-#if os(Linux)
-extension EditTests {
-    static let allTests = [
-        ("testExample", testExample)
-    ]
-}
-#endif

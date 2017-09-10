@@ -44,17 +44,18 @@ public extension Highway {
 public final class Autobahn<H: Highway> {
     let version = "0.1.0"
 
-    var beforeAllHandler: ((H) throws -> Void)?
-    var highways = [H: () throws -> Void]()
-    var afterAllHandler: ((H) throws -> Void)?
-    var onErrorHandler: ((String, Error) -> Void)?
+    private var beforeAllHandler: ((H) throws -> Void)?
+    private var highways = [H: () throws -> Void]()
+    private var dependings = [H: [H]]()
+    private var afterAllHandler: ((H) throws -> Void)?
+    private var onErrorHandler: ((String, Error) -> Void)?
     
     // MARK: - Possible errors
     
     public enum HighwayError: Error {
         case noHighwaySpecified
         case noValidHighwayName(String)
-        case highwayNotFound(String)
+        case highwayNotDefined(String)
     }
     
     // MARK: - Public Functions
@@ -69,8 +70,11 @@ public final class Autobahn<H: Highway> {
         return self
     }
     
-    public func highway(_ highway: H, dependsOn: [H] = [], taskHandler: @escaping () throws -> Void) -> Autobahn<H> {
+    public func highway(_ highway: H, dependsOn: [H]? = nil, taskHandler: @escaping () throws -> Void) -> Autobahn<H> {
         self.highways[highway] = taskHandler
+        if let d = dependsOn {
+            self.dependings[highway] = d
+        }
         return self
     }
     
@@ -102,14 +106,28 @@ public final class Autobahn<H: Highway> {
                 throw HighwayError.noValidHighwayName(raw)
             }
             try self.beforeAllHandler?(currentHighway)
-            guard let highway = self.highways[currentHighway] else {
-                throw HighwayError.highwayNotFound(currentHighway.rawValue)
-            }
-            try highway()
+            try self.driveHighway(currentHighway)
             try self.afterAllHandler?(currentHighway)
         } catch {
             self.onErrorHandler?(secondArg ?? "", error)
         }
+    }
+    
+    // MARK: - private functions
+    
+    private func driveHighway(_ highway: H) throws {
+        guard let highwayHandler = self.highways[highway] else {
+            throw HighwayError.highwayNotDefined(highway.rawValue)
+        }
+        if let dependings = self.dependings[highway] {
+            for dependingHighway in dependings {
+                guard let d = self.highways[dependingHighway] else {
+                    throw HighwayError.highwayNotDefined(dependingHighway.rawValue)
+                }
+                try d()
+            }
+        }
+        try highwayHandler()
     }
 }
 

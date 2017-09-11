@@ -18,7 +18,7 @@ Autobahn(Highway.self)
 
 .highway(.buildRelease) {
 	print("Building...")
-	try sh("swift", "build", "-c", "release")
+	try sh("swift", "build", "-c", "release", "--static-swift-stdlib")
 }
 
 .highway(.test) {

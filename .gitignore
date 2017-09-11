@@ -2,3 +2,6 @@
 /.build
 /Packages
 /*.xcodeproj
+
+*.log
+.vagrant

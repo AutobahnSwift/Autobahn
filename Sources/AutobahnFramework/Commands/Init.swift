@@ -16,11 +16,14 @@ public final class Init: Command {
     public func run(arguments: [String]) throws {
 //        let path = try value("path", from: arguments)
         let path = "Autobahn.swift"
-        if FileManager.default.fileExists(atPath: path) {
+        let fm = FileManager.default
+        if fm.fileExists(atPath: path) {
             let answer = console.ask("Do you want to override the existing Autobahn.swift file? (y/n): ")
             if answer == "y" {
                 let fileData = autobahnSwiftTemplate.data(using: .utf8)
-                FileManager.default.createFile(atPath: path, contents: fileData, attributes: nil)
+                if !fm.createFile(atPath: path, contents: fileData, attributes: nil) {
+                    throw AutobahnError.general("Unable to create Autobahn.swift", help: "¯\\_(ツ)_/¯")
+                }
             } else {
                 console.warning("Init aborted!")
             }

@@ -1,3 +1,7 @@
+branches:
+  only:
+    - "master"
+language: generic
 matrix:
   include:
     - os: linux
@@ -7,15 +11,13 @@ matrix:
         - tar xzf swift-4.0-DEVELOPMENT-SNAPSHOT-2017-09-08-a-ubuntu14.04.tar.gz
         - export PATH=${PWD}/swift-4.0-DEVELOPMENT-SNAPSHOT-2017-09-08-a-ubuntu14.04/usr/bin:"${PATH}"
       script:
-        - swift package update
         - swift build
-        - swift build -c release
-        - swift test
+        - .build/debug/autobahn drive buildRelease
+        - .build/debug/autobahn drive test
     - os: osx
       osx_image: xcode9
       sudo: required
       script:
-        - swift package update
         - swift build
-        - swift build -c release
-        - swift test
+        - .build/debug/autobahn drive buildRelease
+        - .build/debug/autobahn drive test

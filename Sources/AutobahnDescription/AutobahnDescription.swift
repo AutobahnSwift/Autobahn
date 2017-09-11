@@ -5,7 +5,7 @@
 #endif
 
 import Foundation
-import Actions
+@_exported import Actions
 
 private extension Array {
     var second: Element? {

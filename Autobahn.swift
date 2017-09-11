@@ -6,6 +6,7 @@ enum Highway: String, AutobahnDescription.Highway {
 	case test
 	case ci
 	case deploy, release
+	case experiments
 }
 
 Autobahn(Highway.self)
@@ -16,15 +17,15 @@ Autobahn(Highway.self)
 
 .highway(.build) {
 	print("Building...")
-	try sh("swift", "build")
+	try sh("swift", "build", "--enable-prefetching")
 }
 
 .highway(.buildRelease) {
-	try sh("swift", "build", "-c", "release")
+	try sh("swift", "build", "--enable-prefetching", "-c", "release")
 }
 
 .highway(.test) {
-	try sh("swift", "test")
+	try sh("swift", "test", "--enable-prefetching")
 }
 
 .highway(.ci, dependsOn: [.buildRelease, .test])
@@ -35,6 +36,10 @@ Autobahn(Highway.self)
 
 .highway(.release, dependsOn: [.build, .deploy]) {
 	print("Releasing...")
+}
+
+.highway(.experiments) {
+	try ShellCommand.run("swift", args: ["test"])
 }
 
 .afterAll { highway in

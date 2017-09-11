@@ -1,10 +1,17 @@
 import Foundation
 
-public enum ShellError: Error {
+public enum ShellError: ActionError {
     case nonZeroExitCode(String)
 }
 
-public enum Shell {
+public struct ShellCommand: Action {
+    public let description = ""
+    public var authors = ["Kaden Wilkinson"]
+    
+    public var options: [Option] = [
+        Option(key: "cmd")
+    ]
+    
     public static func run(_ cmd: String, args: [String]) throws {
         let proc = Process()
         proc.launchPath = "/usr/bin/env"

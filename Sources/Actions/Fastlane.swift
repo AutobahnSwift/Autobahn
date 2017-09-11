@@ -1,11 +1,15 @@
 import Foundation
 
+public enum FastlaneError: ActionError {
+
+}
+
 enum Fastlane {
     static func lane(_ name: String) throws {
-        try Shell.run("fastlane", args: [name])
+        try ShellCommand.run("fastlane", args: [name])
     }
 
     static func lane(_ name: String, platform: String) throws {
-        try Shell.run("fastlane", args: [platform, name])
+        try ShellCommand.run("fastlane", args: [platform, name])
     }
 }

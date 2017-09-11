@@ -42,8 +42,10 @@ public extension Highway {
 }
 
 public final class Autobahn<H: Highway> {
-    let version = "0.1.0"
+    public let version = "0.1.0"
 
+    private var highwayStart: Date
+    private var highwayEnd: Date?
     private var beforeAllHandler: ((H) throws -> Void)?
     private var highways = [H: () throws -> Void]()
     private var dependings = [H: [H]]()
@@ -60,37 +62,41 @@ public final class Autobahn<H: Highway> {
     
     // MARK: - Public Functions
     
-    public init(_ highwayType: H.Type) {}
+    public init(_ highwayType: H.Type) {
+        self.highwayStart = Date()
+    }
     
     public func beforeAll(handler: @escaping (H) throws -> Void) -> Autobahn<H> {
-        guard self.beforeAllHandler == nil else {
-            fatalError("beforeAll declared more than once")
-        }
-        self.beforeAllHandler = handler
+        precondition(beforeAllHandler == nil, "beforeAll declared more than once")
+        beforeAllHandler = handler
         return self
     }
     
-    public func highway(_ highway: H, dependsOn: [H]? = nil, taskHandler: @escaping () throws -> Void) -> Autobahn<H> {
-        self.highways[highway] = taskHandler
-        if let d = dependsOn {
-            self.dependings[highway] = d
-        }
+    public func highway(_ highway: H, handler: @escaping () throws -> Void) -> Autobahn<H> {
+        self.highways[highway] = handler
+        return self
+    }
+
+    public func highway(_ highway: H, dependsOn highways: [H]) -> Autobahn<H> {
+        dependings[highway] = highways
+        return self
+    }
+
+    public func highway(_ highway: H, dependsOn highways: [H], handler: @escaping () throws -> Void) -> Autobahn<H> {
+        self.highways[highway] = handler
+        dependings[highway] = highways
         return self
     }
     
     public func afterAll(handler: @escaping (H) throws -> Void) -> Autobahn<H> {
-        guard self.afterAllHandler == nil else {
-            fatalError("afterAll declared more than once")
-        }
-        self.afterAllHandler = handler
+        precondition(afterAllHandler == nil, "afterAll declared more than once")
+        afterAllHandler = handler
         return self
     }
     
     public func onError(handler: @escaping (String, Error) -> Void) -> Autobahn<H> {
-        guard self.onErrorHandler == nil else {
-            fatalError("onError declared more than once")
-        }
-        self.onErrorHandler = handler
+        precondition(onErrorHandler == nil, "onError declared more than once")
+        onErrorHandler = handler
         return self
     }
     
@@ -111,26 +117,35 @@ public final class Autobahn<H: Highway> {
         } catch {
             self.onErrorHandler?(secondArg ?? "", error)
         }
+        highwayEnd = Date()
     }
     
     // MARK: - private functions
     
     private func driveHighway(_ highway: H) throws {
-        guard let highwayHandler = self.highways[highway] else {
-            throw HighwayError.highwayNotDefined(highway.rawValue)
-        }
         if let dependings = self.dependings[highway] {
             for dependingHighway in dependings {
                 guard let d = self.highways[dependingHighway] else {
                     throw HighwayError.highwayNotDefined(dependingHighway.rawValue)
                 }
+                printHeader(for: dependingHighway)
                 try d()
             }
         }
-        try highwayHandler()
+        if let handler = highways[highway] {
+            printHeader(for: highway)
+            try handler()
+        }
+    }
+
+    private func printHeader(for highway: H) {
+        let count = highway.rawValue.count
+        print("-------------\(String(repeating: "-", count: count))----")
+        print("--- Highway: \(highway.rawValue) ---")
+        print("-------------\(String(repeating: "-", count: count))----")
     }
 }
 
 public func sh(_ cmd: String, _ args: String...) throws {
-    try Shell.run(cmd, args: args)
+    try ShellCommand.run(cmd, args: args)
 }

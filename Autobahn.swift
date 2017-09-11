@@ -2,13 +2,16 @@ import Foundation
 import AutobahnDescription
 
 enum Highway: String, AutobahnDescription.Highway {
-	case build, buildRelease, test, deploy, release
+	case build, buildRelease
+	case test
+	case ci
+	case deploy, release
 }
 
 Autobahn(Highway.self)
 
 .beforeAll { highway in
-	print("Driving highway: \(highway)")
+
 }
 
 .highway(.build) {
@@ -17,13 +20,14 @@ Autobahn(Highway.self)
 }
 
 .highway(.buildRelease) {
-	print("Building...")
 	try sh("swift", "build", "-c", "release")
 }
 
 .highway(.test) {
 	try sh("swift", "test")
 }
+
+.highway(.ci, dependsOn: [.buildRelease, .test])
 
 .highway(.deploy) {
 	print("Deploying...")

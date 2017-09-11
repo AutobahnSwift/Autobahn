@@ -71,23 +71,19 @@ public final class Autobahn<H: Highway> {
         beforeAllHandler = handler
         return self
     }
-    
+
+    public func highway(_ highway: H, dependsOn highways: [H], handler: @escaping () throws -> Void) -> Autobahn<H> {
+        return self.addHighway(highway, dependsOn: highways, handler: handler)
+    }
+
     public func highway(_ highway: H, handler: @escaping () throws -> Void) -> Autobahn<H> {
-        self.highways[highway] = handler
-        return self
+        return self.addHighway(highway, handler: handler)
     }
 
     public func highway(_ highway: H, dependsOn highways: [H]) -> Autobahn<H> {
-        dependings[highway] = highways
-        return self
+        return self.addHighway(highway, dependsOn: highways)
     }
 
-    public func highway(_ highway: H, dependsOn highways: [H], handler: @escaping () throws -> Void) -> Autobahn<H> {
-        self.highways[highway] = handler
-        dependings[highway] = highways
-        return self
-    }
-    
     public func afterAll(handler: @escaping (H) throws -> Void) -> Autobahn<H> {
         precondition(afterAllHandler == nil, "afterAll declared more than once")
         afterAllHandler = handler
@@ -118,9 +114,19 @@ public final class Autobahn<H: Highway> {
             self.onErrorHandler?(secondArg ?? "", error)
         }
         highwayEnd = Date()
+
+        let duration = highwayEnd!.timeIntervalSince(highwayStart)
+        let rounded = Double(round(100 * duration) / 100)
+        print("Duration: \(rounded)s")
     }
     
-    // MARK: - private functions
+    // MARK: - Private
+
+    private func addHighway(_ highway: H, dependsOn highways: [H]? = nil, handler: (() throws -> Void)? = nil) -> Autobahn<H> {
+        self.highways[highway] = handler
+        dependings[highway] = highways
+        return self
+    }
     
     private func driveHighway(_ highway: H) throws {
         if let dependings = self.dependings[highway] {

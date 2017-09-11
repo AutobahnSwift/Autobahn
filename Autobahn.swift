@@ -21,7 +21,7 @@ Autobahn(Highway.self)
 }
 
 .highway(.buildRelease) {
-	try sh("swift", "build", "--enable-prefetching", "-c", "release")
+	try sh("swift", "build", "--enable-prefetching", "-c", "release", "--static-swift-stdlib")
 }
 
 .highway(.test) {

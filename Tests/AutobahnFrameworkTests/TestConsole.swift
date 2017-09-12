@@ -70,7 +70,7 @@ final class TestConsole: ConsoleProtocol {
         exec(program, args: arguments)
         let command = program + " " + arguments.joined(separator: " ")
         guard let val = backgroundExecuteOutputBuffer[command] else {
-            throw AutobahnError.general("No command set for '\(command)'")
+            throw AutobahnError.general("No command set for '\(command)'", help: "")
         }
         return val
     }

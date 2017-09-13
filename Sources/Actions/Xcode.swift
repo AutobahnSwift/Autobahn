@@ -1,6 +1,6 @@
 import Foundation
 
-public enum XcodeError {
+public enum XcodeError: ActionError {
 
 }
 

@@ -47,9 +47,14 @@ public final class Autobahn {
             terminal.error("Error: ", newLine: false)
             terminal.print("No command supplied.")
         } catch ConsoleError.commandNotFound(let id) {
-            terminal.error("Error: ", newLine: false)
-            terminal.print("Command \"\(id)\" not found.")
-            exit(1)
+            do {
+                let drive = Drive(console: terminal)
+                try drive.run(arguments: args)
+            } catch {
+                terminal.error("Error: ", newLine: false)
+                terminal.print("Command \"\(id)\" not found.")
+                exit(1)
+            }
         } catch {
             terminal.error("Error: ", newLine: false)
             terminal.print("\(error)")
